@@ -3,13 +3,22 @@ from pydantic import BaseModel
 import numpy as np
 import pandas as pd
 import joblib
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# CORS settings
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ⚠️ Allow all origins; replace with specific domains in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load the model
 model = joblib.load("network_issue_detector.pkl")  # Ensure network_issue_detector.pkl is present
-
-# Initialize FastAPI app
-app = FastAPI(title="Network Performance Predictor")
-
 # Input schema
 class InputFeatures(BaseModel):
     latency_ms: float
